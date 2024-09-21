@@ -17,7 +17,7 @@
 
 typedef struct {
 	float *weights, *biases;
-	int input_size, output_size
+	int input_size, output_size;
 } Layer;
 
 typedef struct {
@@ -37,7 +37,7 @@ void read_mnist_images(const char *filename, unsigned char **images, int *nImage
 	int temp, rows, cols;
 	fread(&temp, sizeof(int), 1, file);
 	fread(nImages, sizeof(int), 1, file);
-	*nImages = __builtin_bswap32(nImages);
+	*nImages = __builtin_bswap32(*nImages);
 	
 	fread(&rows, sizeof(int), 1, file);
 	fread(&cols, sizeof(int), 1, file);
