@@ -39,11 +39,29 @@ void read_mnist_images(const char *filename, unsigned char **images, int *nImage
 	fread(nImages, sizeof(int), 1, file);
 	*nImages = __builtin_bswap32(nImages);
 	
+	fread(&rows, sizeof(int), 1, file);
+	fread(&cols, sizeof(int), 1, file);
+
+	rows = __builtin_bswap32(rows);
+	cols = __builtin_bswap32(cols);
+
+	*images = malloc((*nImages) * IMAGE_SIZE * IMAGE_SIZE);
+	fread(*images, sizeof(unsigned char), (*nImages) * IMAGE_SIZE * IMAGE_SIZE, file);
+	fclose(file);
 }
 
 void read_mnist_labels(const char *filename, unsigned char **labels, int *nLabels) {
 	FILE *file = fopen(filename, "rb");
 	if (!file) exit(1);
+
+	int temp;
+	fread(&temp, sizeof(int), 1, file);
+	fread(nLabels, sizeof(int), 1, file);
+	*nLabels = __builtin_bswap32(*nLabels);
+
+	*labels = malloc(*nLabels);
+	fread(*labels, sizeof(unsigned char), *nLabels, file);
+	fclose(file);
 }
 
 int main() {
