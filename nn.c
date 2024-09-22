@@ -49,6 +49,19 @@ void forward(Layer *layer, float *input, float *output) {
 	}
 }
 
+void backward(Layer *layer, float *input, float *output_grad, float *input_grad, float lr) {
+	for (int i = 0; i < layer->output_size; i++) {
+		for (int j = 0; j < layer->input_size; j++) {
+			int idx = j * layer->output_size + i;
+			float grad = output_grad[i] * input[j];
+			layer->weights[idx] -= lr * grad;
+			if (input_grad)
+				input_grad[j] += output_grad[i] * layer->weights[idx];
+		}
+		layer->biases[i] -= lr * output_grad[i];
+	}
+}
+
 void read_mnist_images(const char *filename, unsigned char **images, int *nImages) {
 	FILE *file = fopen(filename, "rb");
 	if (!file) exit(1);
