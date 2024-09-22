@@ -41,6 +41,13 @@ void init_layer(Layer *layer, int in_size, int out_size) {
 	 	layer->weights[i] = ((float)rand() / RAND_MAX - 0.5f) * 2 * scale;
 }
 
+void forward(Layer *layer, float *input, float *output) {
+	for (int i = 0; i < layer->output_size; i++) {
+		output[i] = layer->biases[i];
+		for (int j = 0; j < layer->input_size; j++) 
+			output[i] += input[j] * layer->weights[j * layer->output_size + i];
+	}
+}
 
 void read_mnist_images(const char *filename, unsigned char **images, int *nImages) {
 	FILE *file = fopen(filename, "rb");
