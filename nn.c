@@ -29,6 +29,18 @@ typedef struct {
 	int nImages;
 } InputData;
 
+void init_layer(Layer *layer, int in_size, int out_size) {
+	int n = in_size * out_size;
+	float scale = sqrtf(2.0f / in_size);
+	 layer->input_size = in_size;
+	 layer->output_size = out_size;
+	 layer->weights = malloc(n * sizeof(float));
+	 layer->biases = calloc(out_size, sizeof(float));
+
+	 for (int i = 0; i < n; i++) 
+	 	layer->weights[i] = ((float)rand() / RAND_MAX - 0.5f) * 2 * scale;
+}
+
 
 void read_mnist_images(const char *filename, unsigned char **images, int *nImages) {
 	FILE *file = fopen(filename, "rb");
@@ -65,6 +77,14 @@ void read_mnist_labels(const char *filename, unsigned char **labels, int *nLabel
 }
 
 int main() {
+	Network net;
+	InputData data = {0};
+	float learning_rate = LEARNING_RATE, img[INPUT_SIZE];
+
+	srand(time(NULL));
+
+
+
 	read_mnist_images("datasets/train-images.idx3-ubyte", NULL, NULL);
 	read_mnist_labels("datasets/train-labels.idx1-ubyte", NULL, NULL);
 }
